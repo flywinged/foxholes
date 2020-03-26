@@ -348,7 +348,7 @@ def solveBoardSize(boardSize: Tuple[int], checks: int, maxLoops: int = 32, lenie
         
         print(1)
         pooledBoardStates = None
-        with Pool(16) as p:
+        with Pool(3) as p:
             pooledBoardStates = p.map_async(partial(singleStep, checks=checks), lastBoardStates).get()
         print(2)
         
@@ -376,15 +376,22 @@ def solveBoardSize(boardSize: Tuple[int], checks: int, maxLoops: int = 32, lenie
 #         else:
 #             print(f"{n}x{n} - {checks}: {len(solution.checkHistory)}")
 
-t1 = time.time()
-solution = solveBoardSize((2,2,2,2,2,2,2,2), 46, maxLoops=64, leniency=3, log=True)
-# solution = solveBoardSize((8, 8), 5, log=True, leniency=1)
-t2 = time.time()
-if solution is not None:
-    # solution.showPath()
-    print("\t", len(solution.checkHistory), t2 - t1)
-else:
-    print("\t", "No Solution", t2 - t1)
+
+if __name__ == "__main__":
+
+    import sys
+    checks = int(sys.argv[1])
+    shape = tuple([int(i) for i in sys.argv[2:]])
+
+    t1 = time.time()
+    solution = solveBoardSize(shape, checks, maxLoops=64, leniency=3, log=True)
+    # solution = solveBoardSize((8, 8), 5, log=True, leniency=1)
+    t2 = time.time()
+    if solution is not None:
+        solution.showPath()
+        print("\t", len(solution.checkHistory), t2 - t1)
+    else:
+        print("\t", "No Solution", t2 - t1)
 
 # for i in range(2, 7):
 #     for j in range(2, 7):
